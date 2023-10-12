@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,10 +15,14 @@ public class StateMachine {
     public StateMachine(String file) {
         try {
             load(file);
-        } catch (Exception e) {
-            // TODO: handle exception
+        } catch (FileNotFoundException e) {
+            System.out.println(ConsoleColours.RED + "File '" + file + "' not found!" + ConsoleColours.RESET);
+            System.exit(2);
+        } catch (IOException e) {
+            System.out.println(ConsoleColours.RED + "Encountered IOException:\n" + e.getMessage() + ConsoleColours.RESET);
         }
 
+        // Always create error state 
         states.put("ERROR", new State(true, true));
     }
 
@@ -33,12 +38,12 @@ public class StateMachine {
             activeState = states.get(activeState.transition(input[index]));
             
             if(index == inStr.length() - 1) {
-                System.out.println("Finished input");
+                System.out.println(ConsoleColours.PURPLE + "Finished input" + ConsoleColours.RESET);
                 if(activeState.isEndState()) {
-                    System.out.println(activeState.isErrorState() ? "Error!" : "Accepting State!");
+                    System.out.println((activeState.isErrorState() ? (ConsoleColours.RED + "Error!") : (ConsoleColours.GREEN + "Accepting State!")) + ConsoleColours.RESET);
                 }
                 else {
-                    System.out.println("Reached end of input in non-end state!");
+                    System.out.println(ConsoleColours.RED + "Reached end of input in non-end state!" + ConsoleColours.RESET);
                 }
                 break;
             } 
