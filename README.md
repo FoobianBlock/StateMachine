@@ -3,7 +3,7 @@ Little thing I threw together for school
 
 ## Example Input file
 *This automaton reaches an accepting state for decimal numbers (definition may vary from reader to reader)*
-```txt
+```
 // $            = initial state
 // %            = accept state
 // a1:          = state header
