@@ -67,6 +67,8 @@ public class StateMachine {
             String line;
             String lastState = "";
 
+            HashMap<String,String> replacements = new HashMap<>();
+
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
                     // COMMENT -> ignore
@@ -83,28 +85,39 @@ public class StateMachine {
                                 startState = states.get(state);
                             }
                         } else {
-                            // See if a state is at the far right of the line delimited by a '>'
-                            char[] chars = line.toCharArray();
-                            for (int i = line.length() - 1; i >= 0; i--) {
-                                if (chars[i] == ';') {
-                                    break;
-                                } else if (chars[i] == '>') {
-                                    // TRANSITION
-                                    String targetState = line.substring(i + 1, line.length());
-    
-                                    for (int j = 0; j < chars.length - targetState.length() - 1; j++) {
-                                        switch (chars[j]) {
-                                            case ';':
-                                                // Yes that means ';' are actually optional, but it's nicer to read
-                                                break;
-                                            
-                                            default:
-                                                states.get(lastState).addTransition(chars[j], targetState);
-                                                break;
+                            // Replacements are always defined before any state
+                            if(lastState.isEmpty()) {
+                                String[] r = line.split("=");
+                                replacements.put(r[0], r[1]);
+                            }
+                            else {
+                                // See if a state is at the far right of the line delimited by a '>'
+                                for (String s : replacements.keySet()) {
+                                    line = line.replaceAll(s, replacements.get(s));
+                                }
+
+                                char[] chars = line.toCharArray();
+                                for (int i = line.length() - 1; i >= 0; i--) {
+                                    if (chars[i] == ';') {
+                                        break;
+                                    } else if (chars[i] == '>') {
+                                        // TRANSITION
+                                        String targetState = line.substring(i + 1, line.length());
+        
+                                        for (int j = 0; j < chars.length - targetState.length() - 1; j++) {
+                                            switch (chars[j]) {
+                                                case ';':
+                                                    // Yes that means ';' are actually optional, but it's nicer to read
+                                                    break;
+                                                
+                                                default:
+                                                    states.get(lastState).addTransition(chars[j], targetState);
+                                                    break;
+                                            }
                                         }
+        
+                                        break;
                                     }
-    
-                                    break;
                                 }
                             }
                         }

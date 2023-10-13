@@ -9,28 +9,32 @@ Little thing I threw together for school
 // a1:          = state header
 // x;y>state    = transitions to 'state'
 // x;y>$start   = (the % or $ musn't be left out when denoting targets)
+// ABC#a;b;c    = Replace any occurence of 'ABC' in transitions
+//                with 'a;b;c' (must be defined before the first state)
+
+NONZERONUMBER#1;2;3;4;5;6;7;8;9
 
 $z0:
 ->z1
 0>z3
-1;2;3;4;5;6;7;8;9>z2
+NONZERONUMBER>z2
 
 z1:
 0>z3
-1;2;3;4;5;6;7;8;9>z2
+NONZERONUMBER>z2
 
 z2:
-0;1;2;3;4;5;6;7;8;9>z2
+0;NONZERONUMBER>z2
 .>z4
 
 z3:
 .>z4
 
 z4:
-0;1;2;3;4;5;6;7;8;9>%z6
+0;NONZERONUMBER>%z6
 
 %z6:
-0;1;2;3;4;5;6;7;8;9>%z6
+0;NONZERONUMBER>%z6
 ```
 
 ## Shortcomings
